@@ -1,5 +1,4 @@
-{% set version = "1.1" %}
-
+{% set version = '1.1' %}
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -8,35 +7,37 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  fn: kriging_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/kriging_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/kriging/kriging_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/kriging_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/kriging/kriging_{{ version }}.tar.gz
   sha256: bc20a08af3e6175836985cb0763cca20faf32f4190e6b779a656b8fcc8c87d11
 
 build:
-  merge_build_host: true  # [win]
-  number: 1003
-  skip: true  # [win32]
-
+  merge_build_host: True  # [win]
+  number: 1004
   rpaths:
     - lib/R/lib/
     - lib/
 
 requirements:
   build:
-    - posix                # [win]
-    - {{ compiler('c') }}        # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ posix }}filesystem        # [win]
+    - {{ posix }}make
+    - {{ posix }}sed               # [win]
+    - {{ posix }}coreutils         # [win]
+    - {{ posix }}zip               # [win]
+    - cross-r-base {{ r_base }}    # [build_platform != target_platform]
   host:
     - r-base
-
   run:
     - r-base
+    - {{ native }}gcc-libs         # [win]
 
 test:
   commands:
-    - $R -e "library('kriging')"  # [not win]
+    - $R -e "library('kriging')"           # [not win]
     - "\"%R%\" -e \"library('kriging')\""  # [win]
 
 about:
@@ -44,13 +45,22 @@ about:
   license: GPL-2.0-only
   summary: Simple and highly optimized ordinary kriging algorithm to plot geographical data
   license_family: GPL2
-
   license_file:
-    - {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2
+    - '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+
 extra:
   recipe-maintainers:
     - conda-forge/r
-    - johanneskoester
-    - bgruening
-    - daler
-    - jdblischak
+
+# Package: kriging
+# Version: 1.1
+# License: GPL-2
+# Description: Simple and highly optimized ordinary kriging algorithm to plot geographical data
+# Title: Ordinary Kriging
+# Author: Omar E. Olmedo
+# Maintainer: Omar E. Olmedo <omareolmedo@gmail.com>
+# Suggests: maps
+# Packaged: 2014-12-01 15:38:27 UTC; oolmedo
+# NeedsCompilation: yes
+# Repository: CRAN
+# Date/Publication: 2014-12-01 17:55:32

@@ -1,4 +1,4 @@
-{% set version = '1.1' %}
+{% set version = "1.2" %}
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -10,11 +10,11 @@ source:
   url:
     - {{ cran_mirror }}/src/contrib/kriging_{{ version }}.tar.gz
     - {{ cran_mirror }}/src/contrib/Archive/kriging/kriging_{{ version }}.tar.gz
-  sha256: bc20a08af3e6175836985cb0763cca20faf32f4190e6b779a656b8fcc8c87d11
+  sha256: c8238db37ba0efba2ec874a25b5738a0fa554800606b08486e94838710db0ce9
 
 build:
-  merge_build_host: True  # [win]
-  number: 1004
+  merge_build_host: true  # [win]
+  number: 0
   rpaths:
     - lib/R/lib/
     - lib/
@@ -46,7 +46,7 @@ about:
   summary: Simple and highly optimized ordinary kriging algorithm to plot geographical data
   license_family: GPL2
   license_file:
-    - '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2'
+    - {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-2
 
 extra:
   recipe-maintainers:
